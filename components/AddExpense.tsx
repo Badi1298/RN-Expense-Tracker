@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, TextInput } from 'react-native';
 
+import dayjs from 'dayjs';
+import DateTimePicker from 'react-native-ui-datepicker';
+
 import BaseButton from './ui/BaseButton';
+import { set } from 'date-fns';
 
 type Props = {
     showModal: boolean;
@@ -9,12 +13,19 @@ type Props = {
 };
 
 export default function AddExpense({ showModal, onHideModal }: Props) {
+    const [expense, setExpense] = useState({
+        title: '',
+        amount: '',
+        date: dayjs(),
+    });
+    const [date, setDate] = useState(dayjs());
+
     function hideModalHandler() {
         onHideModal();
     }
 
     function addExpenseHandler() {
-        // Add expense logic here
+        console.log(expense);
     }
 
     return (
@@ -24,16 +35,35 @@ export default function AddExpense({ showModal, onHideModal }: Props) {
                     <Text style={styles.modalText}>Add Expense</Text>
                     <View style={styles.inputContainer}>
                         <Text>Expense Title:</Text>
-                        <TextInput style={styles.textInput} />
+                        <TextInput
+                            value={expense.title}
+                            style={styles.textInput}
+                            onChangeText={(text) =>
+                                setExpense((prev) => ({ ...prev, title: text }))
+                            }
+                        />
                     </View>
                     <View style={styles.inputContainer}>
                         <Text>Expense Amount:</Text>
-                        <TextInput style={styles.textInput} />
+                        <TextInput
+                            value={expense.amount}
+                            style={styles.textInput}
+                            keyboardType="numeric"
+                            onChangeText={(text) =>
+                                setExpense((prev) => ({
+                                    ...prev,
+                                    amount: text,
+                                }))
+                            }
+                        />
                     </View>
-                    <View style={styles.inputContainer}>
-                        <Text>Expense Date:</Text>
-                        <TextInput style={styles.textInput} />
-                    </View>
+                    <DateTimePicker
+                        mode="single"
+                        date={date}
+                        onChange={(params) => {
+                            setDate(dayjs(params.date));
+                        }}
+                    />
 
                     <View style={styles.buttonsContainer}>
                         <BaseButton title="Close" onPress={hideModalHandler} />
