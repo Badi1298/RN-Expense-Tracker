@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import {
     View,
@@ -17,23 +17,26 @@ import { expenses } from '../data/expenses';
 import { isAfter, subDays } from 'date-fns';
 
 import ExpenseItem from '../components/ExpenseItem';
+import AddExpense from '../components/AddExpense';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
 export default function RecentExpensesScreen({ navigation }: Props) {
     const [showModal, setShowModal] = useState(false);
 
-    navigation.setOptions({
-        headerRight: () => (
-            <Ionicons
-                name="add"
-                size={24}
-                color="black"
-                style={{ marginRight: 10 }}
-                onPress={() => setShowModal(true)}
-            />
-        ),
-    });
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Ionicons
+                    name="add"
+                    size={24}
+                    color="black"
+                    style={{ marginRight: 10 }}
+                    onPress={() => setShowModal(true)}
+                />
+            ),
+        });
+    }, [navigation]);
 
     const lastSevenDaysExpenses = expenses.filter((expense) =>
         isAfter(new Date(expense.date), subDays(new Date(), 7))
@@ -52,19 +55,10 @@ export default function RecentExpensesScreen({ navigation }: Props) {
                 )}
                 keyExtractor={(item) => item.id.toString()}
             />
-            <Modal animationType="fade" transparent={true} visible={showModal}>
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Hello World!</Text>
-                        <Pressable
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => setShowModal(!showModal)}
-                        >
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
+            <AddExpense
+                showModal={showModal}
+                onHideModal={() => setShowModal(false)}
+            />
         </View>
     );
 }
