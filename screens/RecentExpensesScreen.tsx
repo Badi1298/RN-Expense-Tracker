@@ -1,9 +1,19 @@
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import React, { useState } from 'react';
-import { View, Text, Modal, StyleSheet, Pressable } from 'react-native';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import {
+    View,
+    Text,
+    Modal,
+    StyleSheet,
+    Pressable,
+    FlatList,
+} from 'react-native';
+
 import { RootTabParamsList } from '../navigation/RootBottomTabs';
 
 import { Ionicons } from '@expo/vector-icons';
+
+import { expenses } from '../data/expenses';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
@@ -25,7 +35,18 @@ export default function RecentExpensesScreen({ navigation }: Props) {
     return (
         <View>
             <Text>RecentExpensesScreen</Text>
-            <Modal animationType="slide" transparent={true} visible={showModal}>
+            <FlatList
+                data={expenses}
+                renderItem={({ item }) => (
+                    <View>
+                        <Text>{item.title}</Text>
+                        <Text>{item.amount}</Text>
+                        <Text>{item.date.toDateString()}</Text>
+                    </View>
+                )}
+                keyExtractor={(item) => item.id.toString()}
+            />
+            <Modal animationType="fade" transparent={true} visible={showModal}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Hello World!</Text>
