@@ -14,6 +14,9 @@ import { RootTabParamsList } from '../navigation/RootBottomTabs';
 import { Ionicons } from '@expo/vector-icons';
 
 import { expenses } from '../data/expenses';
+import { isAfter, subDays } from 'date-fns';
+
+import ExpenseItem from '../components/ExpenseItem';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
@@ -32,17 +35,20 @@ export default function RecentExpensesScreen({ navigation }: Props) {
         ),
     });
 
+    const lastSevenDaysExpenses = expenses.filter((expense) =>
+        isAfter(new Date(expense.date), subDays(new Date(), 7))
+    );
+
     return (
         <View>
-            <Text>RecentExpensesScreen</Text>
             <FlatList
-                data={expenses}
+                data={lastSevenDaysExpenses}
                 renderItem={({ item }) => (
-                    <View>
-                        <Text>{item.title}</Text>
-                        <Text>{item.amount}</Text>
-                        <Text>{item.date.toDateString()}</Text>
-                    </View>
+                    <ExpenseItem
+                        title={item.title}
+                        amount={item.amount}
+                        date={item.date.toDateString()}
+                    />
                 )}
                 keyExtractor={(item) => item.id.toString()}
             />
