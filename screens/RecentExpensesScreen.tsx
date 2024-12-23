@@ -13,11 +13,20 @@ import { isAfter, subDays } from 'date-fns';
 
 import AddExpense from '../components/AddExpense';
 import ExpensesList from '../components/ExpensesList';
+import dayjs from 'dayjs';
+import { Expense } from '../store/slices/expensesSlice';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
 export default function RecentExpensesScreen({ navigation }: Props) {
     const expenses = useSelector((state: RootState) => state.expenses);
+
+    const [expense, setExpense] = useState<Expense>({
+        id: null,
+        title: '',
+        amount: '',
+        date: dayjs().toString(),
+    });
 
     const [showModal, setShowModal] = useState(false);
 
@@ -40,7 +49,12 @@ export default function RecentExpensesScreen({ navigation }: Props) {
     );
 
     function expenseItemPressHandler(id: number) {
-        console.log(id);
+        const foundExpense = expenses.find((expense) => expense.id === id);
+
+        if (!foundExpense) return;
+
+        setExpense(foundExpense);
+        setShowModal(true);
     }
 
     return (
@@ -56,6 +70,8 @@ export default function RecentExpensesScreen({ navigation }: Props) {
                 onItemPress={expenseItemPressHandler}
             />
             <AddExpense
+                expense={expense}
+                setExpense={setExpense}
                 showModal={showModal}
                 onHideModal={() => setShowModal(false)}
             />

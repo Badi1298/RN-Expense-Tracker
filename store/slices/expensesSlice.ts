@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface Expense {
-    id: number;
+    id: number | null;
     title: string;
     amount: string;
     date: string;

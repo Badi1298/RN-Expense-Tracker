@@ -11,22 +11,18 @@ import DateTimePicker from 'react-native-ui-datepicker';
 import BaseButton from './ui/BaseButton';
 
 type Props = {
-    expense?: Expense;
+    expense: Expense;
+    setExpense: React.Dispatch<React.SetStateAction<Expense>>;
     showModal: boolean;
     onHideModal: () => void;
 };
 
-export default function AddExpense({ showModal, onHideModal }: Props) {
-    const expenses = useSelector((state: RootState) => state.expenses);
-    const dispatch = useDispatch();
-
-    const [expense, setExpense] = useState({
-        id: '',
-        title: '',
-        amount: '',
-        date: dayjs(),
-    });
-
+export default function AddExpense({
+    expense,
+    setExpense,
+    showModal,
+    onHideModal,
+}: Props) {
     function hideModalHandler() {
         onHideModal();
     }
@@ -42,10 +38,10 @@ export default function AddExpense({ showModal, onHideModal }: Props) {
 
     function resetExpenseForm() {
         setExpense({
-            id: '',
+            id: null,
             title: '',
             amount: '',
-            date: dayjs(),
+            date: dayjs().toString(),
         });
     }
 
@@ -88,7 +84,7 @@ export default function AddExpense({ showModal, onHideModal }: Props) {
                         onChange={(params) => {
                             setExpense((prev) => ({
                                 ...prev,
-                                date: dayjs(params.date),
+                                date: dayjs(params.date).toString(),
                             }));
                         }}
                     />
