@@ -13,6 +13,7 @@ import { isAfter, subDays } from 'date-fns';
 
 import ExpenseItem from '../components/ExpenseItem';
 import AddExpense from '../components/AddExpense';
+import ExpensesList from '../components/ExpensesList';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
@@ -46,17 +47,7 @@ export default function RecentExpensesScreen({ navigation }: Props) {
                     Expenses for the last 7 days
                 </Text>
             </View>
-            <FlatList
-                data={lastSevenDaysExpenses}
-                renderItem={({ item }) => (
-                    <ExpenseItem
-                        title={item.title}
-                        amount={item.amount}
-                        date={item.date}
-                    />
-                )}
-                keyExtractor={(item) => item.id.toString()}
-            />
+            <ExpensesList expenses={lastSevenDaysExpenses} />
             <AddExpense
                 showModal={showModal}
                 onHideModal={() => setShowModal(false)}
