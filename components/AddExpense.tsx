@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import DateTimePicker from 'react-native-ui-datepicker';
 
 import BaseButton from './ui/BaseButton';
-import { set } from 'date-fns';
 
 type Props = {
     showModal: boolean;

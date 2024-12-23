@@ -1,19 +1,14 @@
 import React, { useLayoutEffect, useState } from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import {
-    View,
-    Text,
-    Modal,
-    StyleSheet,
-    Pressable,
-    FlatList,
-} from 'react-native';
+
+import { RootState } from '../store';
+import { useSelector } from 'react-redux';
 
 import { RootTabParamsList } from '../navigation/RootBottomTabs';
 
 import { Ionicons } from '@expo/vector-icons';
 
-import { expenses } from '../data/expenses';
 import { isAfter, subDays } from 'date-fns';
 
 import ExpenseItem from '../components/ExpenseItem';
@@ -22,6 +17,8 @@ import AddExpense from '../components/AddExpense';
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
 export default function RecentExpensesScreen({ navigation }: Props) {
+    const expenses = useSelector((state: RootState) => state.expenses);
+
     const [showModal, setShowModal] = useState(false);
 
     useLayoutEffect(() => {

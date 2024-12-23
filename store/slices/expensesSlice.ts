@@ -1,4 +1,14 @@
-export const expenses = [
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+
+export interface Expense {
+    id: number;
+    title: string;
+    amount: string;
+    date: Date;
+}
+
+const initialState: Expense[] = [
     {
         id: 1,
         title: 'Car Insurance',
@@ -60,3 +70,20 @@ export const expenses = [
         date: new Date(2024, 6, 15),
     },
 ];
+
+export const expensesSlice = createSlice({
+    name: 'expenses',
+    initialState,
+    reducers: {
+        addExpense(state, action: PayloadAction<Expense>) {
+            state.push(action.payload);
+        },
+        removeExpense(state, action: PayloadAction<number>) {
+            return state.filter((expense) => expense.id !== action.payload);
+        },
+    },
+});
+
+export const { addExpense, removeExpense } = expensesSlice.actions;
+
+export default expensesSlice.reducer;

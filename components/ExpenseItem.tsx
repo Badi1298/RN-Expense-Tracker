@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 type ExpenseItemProps = {
     title: string;
-    amount: number;
+    amount: string;
     date: string;
 };
 
@@ -14,7 +14,7 @@ export default function ExpenseItem({ title, amount, date }: ExpenseItemProps) {
                 <Text style={styles.title}>{title}</Text>
                 <Text style={styles.date}>{date}</Text>
             </View>
-            <Text style={styles.amount}>${amount.toFixed(2)}</Text>
+            <Text style={styles.amount}>${amount}</Text>
         </View>
     );
 }
