@@ -1,5 +1,10 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+    createBottomTabNavigator,
+    BottomTabNavigationProp,
+} from '@react-navigation/bottom-tabs';
+
+import { useNavigation } from '@react-navigation/native';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -8,14 +13,34 @@ import RecentExpensesScreen from '../screens/RecentExpensesScreen';
 
 export type RootTabParamsList = {
     RecentExpenses: undefined;
-    Settings: undefined;
+    AllExpenses: undefined;
+    AddExpense: { expenseId: number | null };
 };
 
 const RootTab = createBottomTabNavigator<RootTabParamsList>();
 
 export default function RootBottomTabs() {
+    const navigation =
+        useNavigation<BottomTabNavigationProp<RootTabParamsList>>();
+
     return (
-        <RootTab.Navigator>
+        <RootTab.Navigator
+            screenOptions={{
+                headerRight: () => (
+                    <Ionicons
+                        name="add"
+                        size={24}
+                        color="black"
+                        style={{ marginRight: 10 }}
+                        onPress={() =>
+                            navigation.navigate('AddExpense', {
+                                expenseId: null,
+                            })
+                        }
+                    />
+                ),
+            }}
+        >
             <RootTab.Screen
                 name="RecentExpenses"
                 component={RecentExpensesScreen}
@@ -32,7 +57,7 @@ export default function RootBottomTabs() {
                 }}
             />
             <RootTab.Screen
-                name="Settings"
+                name="AllExpenses"
                 component={AllExpensesScreen}
                 options={{
                     title: 'All Expenses',

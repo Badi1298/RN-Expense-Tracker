@@ -1,39 +1,20 @@
-import React, { useLayoutEffect } from 'react';
+import React from 'react';
 import { View, StyleSheet, Text, Button } from 'react-native';
 
 import { RootState } from '../store';
 import { useSelector } from 'react-redux';
-import { Expense } from '../store/slices/expensesSlice';
 
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamsList } from '../navigation/RootStack';
-
-import { Ionicons } from '@expo/vector-icons';
+import { RootTabParamsList } from '../navigation/RootBottomTabs';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { isAfter, subDays } from 'date-fns';
 
 import ExpensesList from '../components/ExpensesList';
 
-type Props = StackScreenProps<RootStackParamsList, 'Tabs'>;
+type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
 export default function RecentExpensesScreen({ navigation }: Props) {
     const expenses = useSelector((state: RootState) => state.expenses);
-
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerRight: () => (
-                <Ionicons
-                    name="add"
-                    size={24}
-                    color="black"
-                    style={{ marginRight: 10 }}
-                    onPress={() =>
-                        navigation.navigate('AddExpense', { expenseId: null })
-                    }
-                />
-            ),
-        });
-    }, [navigation]);
 
     const lastSevenDaysExpenses = expenses.filter((expense) =>
         isAfter(new Date(expense.date), subDays(new Date(), 7))
