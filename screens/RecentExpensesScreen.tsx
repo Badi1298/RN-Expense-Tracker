@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { View, StyleSheet, FlatList, Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { RootState } from '../store';
@@ -11,7 +11,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { isAfter, subDays } from 'date-fns';
 
-import ExpenseItem from '../components/ExpenseItem';
 import AddExpense from '../components/AddExpense';
 import ExpensesList from '../components/ExpensesList';
 
@@ -40,14 +39,22 @@ export default function RecentExpensesScreen({ navigation }: Props) {
         isAfter(new Date(expense.date), subDays(new Date(), 7))
     );
 
+    function expenseItemPressHandler(id: number) {
+        console.log(id);
+    }
+
     return (
         <View>
             <View style={styles.card}>
                 <Text style={styles.cardText}>
-                    Expenses for the last 7 days
+                    Expenses for the last{' '}
+                    <Text style={styles.clickableText}>7</Text> days
                 </Text>
             </View>
-            <ExpensesList expenses={lastSevenDaysExpenses} />
+            <ExpensesList
+                expenses={lastSevenDaysExpenses}
+                onItemPress={expenseItemPressHandler}
+            />
             <AddExpense
                 showModal={showModal}
                 onHideModal={() => setShowModal(false)}
@@ -62,6 +69,10 @@ const styles = StyleSheet.create({
         padding: 16,
         margin: 10,
         borderRadius: 6,
+    },
+    clickableText: {
+        color: 'blue',
+        textDecorationLine: 'underline',
     },
     cardText: {
         fontSize: 18,

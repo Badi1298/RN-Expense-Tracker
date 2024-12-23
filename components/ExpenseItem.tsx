@@ -1,24 +1,29 @@
 import { format } from 'date-fns';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { Expense } from '../store/slices/expensesSlice';
 
 type ExpenseItemProps = {
-    title: string;
-    amount: string;
-    date: string;
+    expense: Expense;
+    onItemPress: (id: number) => void;
 };
 
-export default function ExpenseItem({ title, amount, date }: ExpenseItemProps) {
+export default function ExpenseItem({
+    expense,
+    onItemPress,
+}: ExpenseItemProps) {
     return (
-        <View style={styles.container}>
-            <View style={styles.leftContainer}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.date}>
-                    {format(new Date(date), 'do MMMM yyyy')}
-                </Text>
+        <Pressable onPress={() => onItemPress(expense.id)}>
+            <View style={styles.container}>
+                <View style={styles.leftContainer}>
+                    <Text style={styles.title}>{expense.title}</Text>
+                    <Text style={styles.date}>
+                        {format(new Date(expense.date), 'do MMMM yyyy')}
+                    </Text>
+                </View>
+                <Text style={styles.amount}>${expense.amount}</Text>
             </View>
-            <Text style={styles.amount}>${amount}</Text>
-        </View>
+        </Pressable>
     );
 }
 

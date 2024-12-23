@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+
+import { RootState } from '../store';
+import { useSelector } from 'react-redux';
+
+import ExpensesList from '../components/ExpensesList';
 
 export default function AllExpensesScreen() {
-    return (
-        <View>
-            <Text>AllExpensesScreen</Text>
-        </View>
-    );
+    const expenses = useSelector((state: RootState) => state.expenses);
+
+    return <ExpensesList expenses={expenses} />;
 }

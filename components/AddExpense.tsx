@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Modal, StyleSheet, TextInput } from 'react-native';
 
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
-import { addExpense } from '../store/slices/expensesSlice';
+import { saveExpense, Expense } from '../store/slices/expensesSlice';
 
 import dayjs from 'dayjs';
 import DateTimePicker from 'react-native-ui-datepicker';
@@ -11,6 +11,7 @@ import DateTimePicker from 'react-native-ui-datepicker';
 import BaseButton from './ui/BaseButton';
 
 type Props = {
+    expense?: Expense;
     showModal: boolean;
     onHideModal: () => void;
 };
@@ -20,6 +21,7 @@ export default function AddExpense({ showModal, onHideModal }: Props) {
     const dispatch = useDispatch();
 
     const [expense, setExpense] = useState({
+        id: '',
         title: '',
         amount: '',
         date: dayjs(),
@@ -29,27 +31,22 @@ export default function AddExpense({ showModal, onHideModal }: Props) {
         onHideModal();
     }
 
-    function addExpenseHandler() {
+    function saveExpressHandler() {
         if (expense.title === '' || expense.amount === '') {
             return;
         }
 
-        dispatch(
-            addExpense({
-                id: expenses.length + 1,
-                title: expense.title,
-                amount: expense.amount,
-                date: expense.date.toString(),
-            })
-        );
+        resetExpenseForm();
+        hideModalHandler();
+    }
 
+    function resetExpenseForm() {
         setExpense({
+            id: '',
             title: '',
             amount: '',
             date: dayjs(),
         });
-
-        hideModalHandler();
     }
 
     return (
@@ -98,7 +95,7 @@ export default function AddExpense({ showModal, onHideModal }: Props) {
 
                     <View style={styles.buttonsContainer}>
                         <BaseButton title="Close" onPress={hideModalHandler} />
-                        <BaseButton title="Save" onPress={addExpenseHandler} />
+                        <BaseButton title="Save" onPress={saveExpressHandler} />
                     </View>
                 </View>
             </View>
