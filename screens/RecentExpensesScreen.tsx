@@ -1,34 +1,23 @@
-import React, { useLayoutEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import React, { useLayoutEffect } from 'react';
+import { View, StyleSheet, Text, Button } from 'react-native';
 
 import { RootState } from '../store';
 import { useSelector } from 'react-redux';
+import { Expense } from '../store/slices/expensesSlice';
 
-import { RootTabParamsList } from '../navigation/RootBottomTabs';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamsList } from '../navigation/RootStack';
 
 import { Ionicons } from '@expo/vector-icons';
 
 import { isAfter, subDays } from 'date-fns';
 
-import AddExpense from '../components/AddExpense';
 import ExpensesList from '../components/ExpensesList';
-import dayjs from 'dayjs';
-import { Expense } from '../store/slices/expensesSlice';
 
-type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
+type Props = StackScreenProps<RootStackParamsList, 'Tabs'>;
 
 export default function RecentExpensesScreen({ navigation }: Props) {
     const expenses = useSelector((state: RootState) => state.expenses);
-
-    const [expense, setExpense] = useState<Expense>({
-        id: null,
-        title: '',
-        amount: '',
-        date: dayjs().toString(),
-    });
-
-    const [showModal, setShowModal] = useState(false);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -38,7 +27,9 @@ export default function RecentExpensesScreen({ navigation }: Props) {
                     size={24}
                     color="black"
                     style={{ marginRight: 10 }}
-                    onPress={() => setShowModal(true)}
+                    onPress={() =>
+                        navigation.navigate('AddExpense', { expenseId: null })
+                    }
                 />
             ),
         });
@@ -53,8 +44,7 @@ export default function RecentExpensesScreen({ navigation }: Props) {
 
         if (!foundExpense) return;
 
-        setExpense(foundExpense);
-        setShowModal(true);
+        navigation.navigate('AddExpense', { expenseId: foundExpense.id });
     }
 
     return (
@@ -69,11 +59,11 @@ export default function RecentExpensesScreen({ navigation }: Props) {
                 expenses={lastSevenDaysExpenses}
                 onItemPress={expenseItemPressHandler}
             />
-            <AddExpense
-                expense={expense}
-                setExpense={setExpense}
-                showModal={showModal}
-                onHideModal={() => setShowModal(false)}
+            <Button
+                title="Go To Add Expense Screen"
+                onPress={() => {
+                    navigation.navigate('AddExpense', { expenseId: null });
+                }}
             />
         </View>
     );
