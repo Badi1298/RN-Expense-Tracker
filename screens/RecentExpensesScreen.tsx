@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Text } from 'react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { RootState } from '../store';
@@ -41,6 +41,11 @@ export default function RecentExpensesScreen({ navigation }: Props) {
 
     return (
         <View>
+            <View style={styles.card}>
+                <Text style={styles.cardText}>
+                    Expenses for the last 7 days
+                </Text>
+            </View>
             <FlatList
                 data={lastSevenDaysExpenses}
                 renderItem={({ item }) => (
@@ -61,6 +66,18 @@ export default function RecentExpensesScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+    card: {
+        backgroundColor: '#ddd',
+        padding: 16,
+        margin: 10,
+        borderRadius: 6,
+    },
+    cardText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+
     centeredView: {
         flex: 1,
         justifyContent: 'center',
