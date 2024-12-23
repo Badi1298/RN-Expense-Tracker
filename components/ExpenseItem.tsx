@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
@@ -12,7 +13,9 @@ export default function ExpenseItem({ title, amount, date }: ExpenseItemProps) {
         <View style={styles.container}>
             <View style={styles.leftContainer}>
                 <Text style={styles.title}>{title}</Text>
-                <Text style={styles.date}>{date}</Text>
+                <Text style={styles.date}>
+                    {format(new Date(date), 'do MMMM yyyy')}
+                </Text>
             </View>
             <Text style={styles.amount}>${amount}</Text>
         </View>

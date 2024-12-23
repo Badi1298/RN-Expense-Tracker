@@ -47,7 +47,7 @@ export default function RecentExpensesScreen({ navigation }: Props) {
                     <ExpenseItem
                         title={item.title}
                         amount={item.amount}
-                        date={item.date.toDateString()}
+                        date={item.date}
                     />
                 )}
                 keyExtractor={(item) => item.id.toString()}

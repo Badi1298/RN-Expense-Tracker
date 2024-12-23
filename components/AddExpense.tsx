@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, TextInput } from 'react-native';
 
+import { RootState } from '../store';
+import { useSelector, useDispatch } from 'react-redux';
+import { addExpense } from '../store/slices/expensesSlice';
+
 import dayjs from 'dayjs';
 import DateTimePicker from 'react-native-ui-datepicker';
 
@@ -12,19 +16,40 @@ type Props = {
 };
 
 export default function AddExpense({ showModal, onHideModal }: Props) {
+    const expenses = useSelector((state: RootState) => state.expenses);
+    const dispatch = useDispatch();
+
     const [expense, setExpense] = useState({
         title: '',
         amount: '',
         date: dayjs(),
     });
-    const [date, setDate] = useState(dayjs());
 
     function hideModalHandler() {
         onHideModal();
     }
 
     function addExpenseHandler() {
-        console.log(expense);
+        if (expense.title === '' || expense.amount === '') {
+            return;
+        }
+
+        dispatch(
+            addExpense({
+                id: expenses.length + 1,
+                title: expense.title,
+                amount: expense.amount,
+                date: expense.date.toString(),
+            })
+        );
+
+        setExpense({
+            title: '',
+            amount: '',
+            date: dayjs(),
+        });
+
+        hideModalHandler();
     }
 
     return (
@@ -58,9 +83,12 @@ export default function AddExpense({ showModal, onHideModal }: Props) {
                     </View>
                     <DateTimePicker
                         mode="single"
-                        date={date}
+                        date={expense.date}
                         onChange={(params) => {
-                            setDate(dayjs(params.date));
+                            setExpense((prev) => ({
+                                ...prev,
+                                date: dayjs(params.date),
+                            }));
                         }}
                     />
 
