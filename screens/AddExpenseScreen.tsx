@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
-    Modal,
     StyleSheet,
     TextInput,
     ScrollView,
+    Button,
 } from 'react-native';
 
 import { RootState } from '../store';
@@ -21,10 +21,10 @@ import { RootStackParamsList } from '../navigation/RootStack';
 type Props = StackScreenProps<RootStackParamsList, 'AddExpense'>;
 
 export default function AddExpense({ route }: Props) {
-    const expenseId = route.params.expenseId;
-
     const expenses = useSelector((state: RootState) => state.expenses);
     const dispatch = useDispatch();
+
+    const { expenseId } = route.params;
 
     const [expense, setExpense] = useState<Expense>({
         id: null,
@@ -50,7 +50,13 @@ export default function AddExpense({ route }: Props) {
             <View style={styles.centeredView}>
                 <View style={styles.inputContainer}>
                     <Text style={styles.labelText}>Expense Title:</Text>
-                    <TextInput value={expense.title} style={styles.textInput} />
+                    <TextInput
+                        value={expense.title}
+                        style={styles.textInput}
+                        onChangeText={(text) =>
+                            setExpense({ ...expense, title: text })
+                        }
+                    />
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.labelText}>Expense Amount:</Text>
@@ -58,12 +64,19 @@ export default function AddExpense({ route }: Props) {
                         value={expense.amount}
                         style={styles.textInput}
                         keyboardType="numeric"
+                        onChangeText={(text) =>
+                            setExpense({ ...expense, amount: text })
+                        }
                     />
                 </View>
                 <View>
                     <Text style={styles.labelText}>Expense Date:</Text>
                     <DateTimePicker mode="single" date={expense.date} />
                 </View>
+                <Button
+                    title="Save Expense"
+                    onPress={() => dispatch(saveExpense(expense))}
+                />
             </View>
         </ScrollView>
     );

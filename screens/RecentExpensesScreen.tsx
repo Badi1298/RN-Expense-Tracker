@@ -40,12 +40,6 @@ export default function RecentExpensesScreen({ navigation }: Props) {
                 expenses={lastSevenDaysExpenses}
                 onItemPress={expenseItemPressHandler}
             />
-            <Button
-                title="Go To Add Expense Screen"
-                onPress={() => {
-                    navigation.navigate('AddExpense', { expenseId: null });
-                }}
-            />
         </View>
     );
 }
