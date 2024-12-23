@@ -57,18 +57,22 @@ export default function AddExpense({ showModal, onHideModal }: Props) {
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <Text style={styles.modalText}>Add Expense</Text>
+
                     <View style={styles.inputContainer}>
-                        <Text>Expense Title:</Text>
+                        <Text style={styles.labelText}>Expense Title:</Text>
                         <TextInput
                             value={expense.title}
                             style={styles.textInput}
                             onChangeText={(text) =>
-                                setExpense((prev) => ({ ...prev, title: text }))
+                                setExpense((prev) => ({
+                                    ...prev,
+                                    title: text,
+                                }))
                             }
                         />
                     </View>
                     <View style={styles.inputContainer}>
-                        <Text>Expense Amount:</Text>
+                        <Text style={styles.labelText}>Expense Amount:</Text>
                         <TextInput
                             value={expense.amount}
                             style={styles.textInput}
@@ -106,6 +110,7 @@ const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
         justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     modalView: {
         margin: 20,
@@ -132,16 +137,23 @@ const styles = StyleSheet.create({
 
     inputContainer: {
         width: '100%',
-        rowGap: 4,
+        marginBottom: 15,
+    },
+    labelText: {
+        marginBottom: 4,
     },
     textInput: {
-        borderColor: 'black',
+        borderColor: 'lightgray',
         borderWidth: 1,
+        borderRadius: 8,
+        padding: 10,
         marginBottom: 15,
+        backgroundColor: '#f9f9f9',
     },
 
     buttonsContainer: {
         flexDirection: 'row',
-        columnGap: 16,
+        justifyContent: 'space-between',
+        width: '100%',
     },
 });
