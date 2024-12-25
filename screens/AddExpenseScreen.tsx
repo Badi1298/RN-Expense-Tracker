@@ -10,13 +10,18 @@ import {
 
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
-import { saveExpense, Expense } from '../store/slices/expensesSlice';
+import {
+    saveExpense,
+    removeExpense,
+    Expense,
+} from '../store/slices/expensesSlice';
 
 import dayjs from 'dayjs';
 import DateTimePicker from 'react-native-ui-datepicker';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/RootStack';
+
 import BaseButton from '../components/ui/BaseButton';
 
 type Props = StackScreenProps<RootStackParamsList, 'AddExpense'>;
@@ -48,6 +53,13 @@ export default function AddExpense({ route, navigation }: Props) {
 
     const handleSaveExpense = () => {
         dispatch(saveExpense(expense));
+        navigation.goBack();
+    };
+
+    const handleDeleteExpense = () => {
+        if (!expense.id) return;
+
+        dispatch(removeExpense(expense.id));
         navigation.goBack();
     };
 
@@ -91,7 +103,21 @@ export default function AddExpense({ route, navigation }: Props) {
                         }
                     />
                 </View>
-                <BaseButton title="Save Expense" onPress={handleSaveExpense} />
+                <View style={{ rowGap: 10 }}>
+                    <BaseButton
+                        title="Save Expense"
+                        onPress={handleSaveExpense}
+                    />
+                    {
+                        // Only show the delete button if the expense has an id
+                        expense.id && (
+                            <BaseButton
+                                title="Delete Expense"
+                                onPress={handleDeleteExpense}
+                            />
+                        )
+                    }
+                </View>
             </View>
         </ScrollView>
     );
