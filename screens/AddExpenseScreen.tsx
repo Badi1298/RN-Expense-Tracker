@@ -17,6 +17,7 @@ import DateTimePicker from 'react-native-ui-datepicker';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/RootStack';
+import BaseButton from '../components/ui/BaseButton';
 
 type Props = StackScreenProps<RootStackParamsList, 'AddExpense'>;
 
@@ -79,6 +80,7 @@ export default function AddExpense({ route, navigation }: Props) {
                     <DateTimePicker
                         mode="single"
                         date={expense.date}
+                        selectedItemColor="#3D3D3D"
                         onChange={(params) =>
                             setExpense((prev) => ({
                                 ...prev,
@@ -89,7 +91,7 @@ export default function AddExpense({ route, navigation }: Props) {
                         }
                     />
                 </View>
-                <Button title="Save Expense" onPress={handleSaveExpense} />
+                <BaseButton title="Save Expense" onPress={handleSaveExpense} />
             </View>
         </ScrollView>
     );

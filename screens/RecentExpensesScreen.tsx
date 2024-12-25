@@ -20,6 +20,13 @@ export default function RecentExpensesScreen({ navigation }: Props) {
         isAfter(new Date(expense.date), subDays(new Date(), 7))
     );
 
+    const lastSevenDaysExpensesTotal = lastSevenDaysExpenses.reduce(
+        (acc, curr) => {
+            return acc + parseFloat(curr.amount);
+        },
+        0
+    );
+
     function expenseItemPressHandler(id: number) {
         const foundExpense = expenses.find((expense) => expense.id === id);
 
@@ -32,8 +39,10 @@ export default function RecentExpensesScreen({ navigation }: Props) {
         <View>
             <View style={styles.card}>
                 <Text style={styles.cardText}>
-                    Expenses for the last{' '}
-                    <Text style={styles.clickableText}>7</Text> days
+                    Last <Text style={styles.clickableText}>7</Text> days
+                </Text>
+                <Text style={styles.cardText}>
+                    ${lastSevenDaysExpensesTotal.toFixed(2)}
                 </Text>
             </View>
             <ExpensesList
@@ -50,6 +59,9 @@ const styles = StyleSheet.create({
         padding: 16,
         margin: 10,
         borderRadius: 6,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     clickableText: {
         color: 'blue',
@@ -58,7 +70,6 @@ const styles = StyleSheet.create({
     cardText: {
         fontSize: 18,
         fontWeight: 'bold',
-        textAlign: 'center',
     },
 
     centeredView: {
