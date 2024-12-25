@@ -20,7 +20,7 @@ import { RootStackParamsList } from '../navigation/RootStack';
 
 type Props = StackScreenProps<RootStackParamsList, 'AddExpense'>;
 
-export default function AddExpense({ route }: Props) {
+export default function AddExpense({ route, navigation }: Props) {
     const expenses = useSelector((state: RootState) => state.expenses);
     const dispatch = useDispatch();
 
@@ -44,6 +44,11 @@ export default function AddExpense({ route }: Props) {
             }
         }
     });
+
+    const handleSaveExpense = () => {
+        dispatch(saveExpense(expense));
+        navigation.goBack();
+    };
 
     return (
         <ScrollView>
@@ -84,10 +89,7 @@ export default function AddExpense({ route }: Props) {
                         }
                     />
                 </View>
-                <Button
-                    title="Save Expense"
-                    onPress={() => dispatch(saveExpense(expense))}
-                />
+                <Button title="Save Expense" onPress={handleSaveExpense} />
             </View>
         </ScrollView>
     );

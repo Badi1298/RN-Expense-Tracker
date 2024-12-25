@@ -79,13 +79,18 @@ export const expensesSlice = createSlice({
             const index = state.findIndex(
                 (expense) => expense.id === action.payload.id
             );
-            if (index !== -1) {
-                state[index] = action.payload;
-            } else {
-                action.payload.id = state.length + 1;
-                state.push(action.payload);
+            try {
+                if (index !== -1) {
+                    state[index] = action.payload;
+                } else {
+                    action.payload.id = state.length + 1;
+                    state.push(action.payload);
+                }
+            } catch (err: any) {
+                throw new Error(err);
             }
         },
+
         removeExpense(state, action: PayloadAction<number>) {
             return state.filter((expense) => expense.id !== action.payload);
         },
