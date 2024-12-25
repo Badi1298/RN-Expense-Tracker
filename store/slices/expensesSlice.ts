@@ -82,6 +82,7 @@ export const expensesSlice = createSlice({
             if (index !== -1) {
                 state[index] = action.payload;
             } else {
+                action.payload.id = state.length + 1;
                 state.push(action.payload);
             }
         },

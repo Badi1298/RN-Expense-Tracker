@@ -16,7 +16,7 @@ export default function ExpensesList({ expenses, onItemPress }: Props) {
             renderItem={({ item }) => (
                 <ExpenseItem expense={item} onItemPress={onItemPress} />
             )}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id!.toString()}
         />
     );
 }

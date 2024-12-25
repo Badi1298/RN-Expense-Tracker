@@ -71,7 +71,18 @@ export default function AddExpense({ route }: Props) {
                 </View>
                 <View>
                     <Text style={styles.labelText}>Expense Date:</Text>
-                    <DateTimePicker mode="single" date={expense.date} />
+                    <DateTimePicker
+                        mode="single"
+                        date={expense.date}
+                        onChange={(params) =>
+                            setExpense((prev) => ({
+                                ...prev,
+                                date:
+                                    params.date?.toString() ||
+                                    dayjs().toString(),
+                            }))
+                        }
+                    />
                 </View>
                 <Button
                     title="Save Expense"
