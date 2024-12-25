@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, Text, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, TextInput } from 'react-native';
 
 import { RootState } from '../store';
 import { useSelector } from 'react-redux';
@@ -14,18 +14,17 @@ import ExpensesList from '../components/ExpensesList';
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
 export default function RecentExpensesScreen({ navigation }: Props) {
+    const [range, setRange] = useState(7);
+
     const expenses = useSelector((state: RootState) => state.expenses);
 
-    const lastSevenDaysExpenses = expenses.filter((expense) =>
-        isAfter(new Date(expense.date), subDays(new Date(), 7))
+    const expensesInRange = expenses.filter((expense) =>
+        isAfter(new Date(expense.date), subDays(new Date(), range))
     );
 
-    const lastSevenDaysExpensesTotal = lastSevenDaysExpenses.reduce(
-        (acc, curr) => {
-            return acc + parseFloat(curr.amount);
-        },
-        0
-    );
+    const expensesInRangeTotal = expensesInRange.reduce((acc, curr) => {
+        return acc + parseFloat(curr.amount);
+    }, 0);
 
     function expenseItemPressHandler(id: number) {
         const foundExpense = expenses.find((expense) => expense.id === id);
@@ -39,14 +38,21 @@ export default function RecentExpensesScreen({ navigation }: Props) {
         <View>
             <View style={styles.card}>
                 <Text style={styles.cardText}>
-                    Last <Text style={styles.clickableText}>7</Text> days
+                    Last{' '}
+                    <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        value={range.toString()}
+                        onChangeText={(text: string) => setRange(Number(text))}
+                    />{' '}
+                    days
                 </Text>
                 <Text style={styles.cardText}>
-                    ${lastSevenDaysExpensesTotal.toFixed(2)}
+                    ${expensesInRangeTotal.toFixed(2)}
                 </Text>
             </View>
             <ExpensesList
-                expenses={lastSevenDaysExpenses}
+                expenses={expensesInRange}
                 onItemPress={expenseItemPressHandler}
             />
         </View>
@@ -64,7 +70,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     clickableText: {
-        color: 'blue',
+        color: '#666666',
         textDecorationLine: 'underline',
     },
     cardText: {
@@ -72,6 +78,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
+    input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        padding: 10,
+        margin: 10,
+    },
     centeredView: {
         flex: 1,
         justifyContent: 'center',

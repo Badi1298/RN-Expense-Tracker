@@ -7,7 +7,7 @@ import ExpensesList from '../components/ExpensesList';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootTabParamsList } from '../navigation/RootBottomTabs';
 
-type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
+type Props = BottomTabScreenProps<RootTabParamsList, 'AllExpenses'>;
 
 export default function AllExpensesScreen({ navigation }: Props) {
     const expenses = useSelector((state: RootState) => state.expenses);
