@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    TextInput,
-    ScrollView,
-    Button,
-} from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
 
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+    Expense,
     saveExpense,
     removeExpense,
-    Expense,
 } from '../store/slices/expensesSlice';
 
 import dayjs from 'dayjs';

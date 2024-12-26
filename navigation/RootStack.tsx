@@ -18,7 +18,11 @@ export default function RootStack() {
                 component={RootBottomTabs}
                 options={{ headerShown: false }}
             />
-            <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
+            <Stack.Screen
+                name="AddExpense"
+                component={AddExpenseScreen}
+                options={{ presentation: 'modal' }}
+            />
         </Stack.Navigator>
     );
 }
