@@ -1,6 +1,14 @@
 import { format } from 'date-fns';
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Pressable,
+    Alert,
+    Platform,
+} from 'react-native';
+
 import { Expense } from '../store/slices/expensesSlice';
 
 type ExpenseItemProps = {
@@ -12,17 +20,31 @@ export default function ExpenseItem({
     expense,
     onItemPress,
 }: ExpenseItemProps) {
+    const handleItemPress = () => {
+        if (!expense.id) {
+            Alert.alert('Error', 'There was an error with this expense.');
+            return;
+        }
+
+        onItemPress(expense.id);
+    };
+
     return (
-        <Pressable onPress={() => onItemPress(expense.id)}>
-            <View style={styles.container}>
-                <View style={styles.leftContainer}>
-                    <Text style={styles.title}>{expense.title}</Text>
-                    <Text style={styles.date}>
-                        {format(new Date(expense.date), 'do MMMM yyyy')}
-                    </Text>
-                </View>
-                <Text style={styles.amount}>${expense.amount}</Text>
+        <Pressable
+            android_ripple={{ color: '#ccc' }}
+            onPress={handleItemPress}
+            style={({ pressed }) => [
+                pressed && Platform.OS === 'ios' && { opacity: 0.5 },
+                styles.container,
+            ]}
+        >
+            <View style={styles.leftContainer}>
+                <Text style={styles.title}>{expense.title}</Text>
+                <Text style={styles.date}>
+                    {format(new Date(expense.date), 'do MMMM yyyy')}
+                </Text>
             </View>
+            <Text style={styles.amount}>${expense.amount}</Text>
         </Pressable>
     );
 }

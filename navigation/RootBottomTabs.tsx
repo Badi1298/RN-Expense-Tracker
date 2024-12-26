@@ -26,11 +26,11 @@ export default function RootBottomTabs() {
     return (
         <RootTab.Navigator
             screenOptions={{
-                headerRight: () => (
+                headerRight: ({ tintColor }) => (
                     <Ionicons
                         name="add"
                         size={24}
-                        color="black"
+                        color={tintColor}
                         style={{ marginRight: 10 }}
                         onPress={() =>
                             navigation.navigate('AddExpense', {

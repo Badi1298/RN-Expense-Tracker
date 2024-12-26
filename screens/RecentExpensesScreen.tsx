@@ -7,35 +7,44 @@ import { useSelector } from 'react-redux';
 import { RootTabParamsList } from '../navigation/RootBottomTabs';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
-import { isAfter, subDays } from 'date-fns';
 import { debounce } from 'lodash';
+import { isAfter, subDays } from 'date-fns';
 
 import ExpensesList from '../components/ExpensesList';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
-export default function RecentExpensesScreen({ navigation }: Props) {
-    const [range, setRange] = useState(7);
-    const [tempRange, setTempRange] = useState('');
-    const debouncedSetRange = useCallback(
-        debounce((value) => {
-            const numericValue = Number(value);
-            if (isNaN(numericValue)) return;
+const debouncedSetRange = debounce(
+    (value: string, setRange: React.Dispatch<React.SetStateAction<string>>) => {
+        setRange(value);
+    },
+    500
+);
 
-            setRange(numericValue);
-        }, 500),
-        []
+export default function RecentExpensesScreen({ navigation }: Props) {
+    const defaultRange = '14';
+
+    const [range, setRange] = useState(defaultRange);
+    const [tempRange, setTempRange] = useState(defaultRange);
+    const memoizedDebouncedSetRange = useCallback(
+        (value: string) => debouncedSetRange(value, setRange),
+        [setRange]
     );
 
     const expenses = useSelector((state: RootState) => state.expenses);
 
     const expensesInRange = expenses.filter((expense) =>
-        isAfter(new Date(expense.date), subDays(new Date(), range))
+        isAfter(new Date(expense.date), subDays(new Date(), +range))
     );
 
     const expensesInRangeTotal = expensesInRange.reduce((acc, curr) => {
         return acc + parseFloat(curr.amount);
     }, 0);
+
+    function handleTextChange(value: string) {
+        setTempRange(value);
+        memoizedDebouncedSetRange(value);
+    }
 
     function expenseItemPressHandler(id: number) {
         const foundExpense = expenses.find((expense) => expense.id === id);
@@ -54,10 +63,7 @@ export default function RecentExpensesScreen({ navigation }: Props) {
                         style={styles.input}
                         value={tempRange}
                         keyboardType="numeric"
-                        onChangeText={(value) => {
-                            setTempRange(value);
-                            debouncedSetRange(value);
-                        }}
+                        onChangeText={handleTextChange}
                     />
                     <Text style={styles.cardText}>days</Text>
                 </View>
