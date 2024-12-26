@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { store } from './store/index';
@@ -16,5 +15,3 @@ export default function App() {
         </Provider>
     );
 }
-
-const styles = StyleSheet.create({});

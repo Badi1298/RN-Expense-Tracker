@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 
 import { RootState } from '../store';
@@ -8,6 +8,7 @@ import { RootTabParamsList } from '../navigation/RootBottomTabs';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 import { isAfter, subDays } from 'date-fns';
+import { debounce } from 'lodash';
 
 import ExpensesList from '../components/ExpensesList';
 
@@ -15,6 +16,16 @@ type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
 export default function RecentExpensesScreen({ navigation }: Props) {
     const [range, setRange] = useState(7);
+    const [tempRange, setTempRange] = useState('');
+    const debouncedSetRange = useCallback(
+        debounce((value) => {
+            const numericValue = Number(value);
+            if (isNaN(numericValue)) return;
+
+            setRange(numericValue);
+        }, 500),
+        []
+    );
 
     const expenses = useSelector((state: RootState) => state.expenses);
 
@@ -37,16 +48,19 @@ export default function RecentExpensesScreen({ navigation }: Props) {
     return (
         <View>
             <View style={styles.card}>
-                <Text style={styles.cardText}>
-                    Last{' '}
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={styles.cardText}>Last</Text>
                     <TextInput
                         style={styles.input}
+                        value={tempRange}
                         keyboardType="numeric"
-                        value={range.toString()}
-                        onChangeText={(text: string) => setRange(Number(text))}
-                    />{' '}
-                    days
-                </Text>
+                        onChangeText={(value) => {
+                            setTempRange(value);
+                            debouncedSetRange(value);
+                        }}
+                    />
+                    <Text style={styles.cardText}>days</Text>
+                </View>
                 <Text style={styles.cardText}>
                     ${expensesInRangeTotal.toFixed(2)}
                 </Text>
@@ -79,11 +93,15 @@ const styles = StyleSheet.create({
     },
 
     input: {
-        height: 40,
         borderColor: 'gray',
-        borderWidth: 1,
-        padding: 10,
-        margin: 10,
+        borderBottomWidth: 2,
+        fontWeight: 'bold',
+        color: '#666666',
+        padding: 0,
+        marginHorizontal: 5,
+        minWidth: 34,
+        fontSize: 18,
+        textAlign: 'center',
     },
     centeredView: {
         flex: 1,
