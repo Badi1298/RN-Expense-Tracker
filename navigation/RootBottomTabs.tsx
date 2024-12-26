@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-    createBottomTabNavigator,
-    BottomTabNavigationProp,
-} from '@react-navigation/bottom-tabs';
-
-import { useNavigation } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -20,12 +15,9 @@ export type RootTabParamsList = {
 const RootTab = createBottomTabNavigator<RootTabParamsList>();
 
 export default function RootBottomTabs() {
-    const navigation =
-        useNavigation<BottomTabNavigationProp<RootTabParamsList>>();
-
     return (
         <RootTab.Navigator
-            screenOptions={{
+            screenOptions={({ navigation }) => ({
                 headerRight: ({ tintColor }) => (
                     <Ionicons
                         name="add"
@@ -39,7 +31,7 @@ export default function RootBottomTabs() {
                         }
                     />
                 ),
-            }}
+            })}
         >
             <RootTab.Screen
                 name="RecentExpenses"
