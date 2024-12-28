@@ -31,6 +31,7 @@ export default function AddExpense({ route, navigation }: Props) {
         amount: '',
         date: dayjs().toString(),
     });
+    const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
         if (expenseId) {
@@ -42,9 +43,20 @@ export default function AddExpense({ route, navigation }: Props) {
                 setExpense(foundExpense);
             }
         }
-    });
+    }, [expenseId, expenses]);
+
+    const validateExpense = () => {
+        if (expense.title === '' || expense.amount === '') {
+            setSubmitted(true);
+            return false;
+        }
+
+        return true;
+    };
 
     const handleSaveExpense = () => {
+        if (!validateExpense()) return;
+
         dispatch(saveExpense(expense));
         navigation.goBack();
     };
@@ -64,21 +76,32 @@ export default function AddExpense({ route, navigation }: Props) {
                     <TextInput
                         value={expense.title}
                         style={styles.textInput}
+                        multiline={true}
                         onChangeText={(text) =>
-                            setExpense({ ...expense, title: text })
+                            setExpense((prev) => ({ ...prev, title: text }))
                         }
                     />
+                    {submitted && expense.title === '' && (
+                        <Text style={{ color: 'red', fontSize: 12 }}>
+                            Enter a title for your expense
+                        </Text>
+                    )}
                 </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.labelText}>Expense Amount:</Text>
                     <TextInput
                         value={expense.amount}
                         style={styles.textInput}
-                        keyboardType="numeric"
+                        keyboardType="decimal-pad"
                         onChangeText={(text) =>
                             setExpense({ ...expense, amount: text })
                         }
                     />
+                    {submitted && expense.amount === '' && (
+                        <Text style={{ color: 'red', fontSize: 12 }}>
+                            Enter the amount for your expense
+                        </Text>
+                    )}
                 </View>
                 <View>
                     <Text style={styles.labelText}>Expense Date:</Text>
