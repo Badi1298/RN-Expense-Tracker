@@ -46,10 +46,13 @@ export default function AddExpense({ route, navigation }: Props) {
     }, [expenseId, expenses]);
 
     const validateExpense = () => {
-        if (expense.title === '' || expense.amount === '') {
-            setSubmitted(true);
-            return false;
-        }
+        setSubmitted(true);
+
+        const invalidTitle = expense.title === '';
+        const invalidAmount =
+            expense.amount === '' || parseInt(expense.amount) < 0;
+
+        if (invalidTitle || invalidAmount) return false;
 
         return true;
     };
@@ -75,7 +78,11 @@ export default function AddExpense({ route, navigation }: Props) {
                     <Text style={styles.labelText}>Expense Title:</Text>
                     <TextInput
                         value={expense.title}
-                        style={styles.textInput}
+                        style={[
+                            styles.textInput,
+                            submitted &&
+                                !expense.title && { borderColor: 'red' },
+                        ]}
                         multiline={true}
                         onChangeText={(text) =>
                             setExpense((prev) => ({ ...prev, title: text }))
@@ -91,7 +98,11 @@ export default function AddExpense({ route, navigation }: Props) {
                     <Text style={styles.labelText}>Expense Amount:</Text>
                     <TextInput
                         value={expense.amount}
-                        style={styles.textInput}
+                        style={[
+                            styles.textInput,
+                            submitted &&
+                                !expense.amount && { borderColor: 'red' },
+                        ]}
                         keyboardType="decimal-pad"
                         onChangeText={(text) =>
                             setExpense({ ...expense, amount: text })
@@ -100,6 +111,11 @@ export default function AddExpense({ route, navigation }: Props) {
                     {submitted && expense.amount === '' && (
                         <Text style={{ color: 'red', fontSize: 12 }}>
                             Enter the amount for your expense
+                        </Text>
+                    )}
+                    {submitted && parseInt(expense.amount) < 0 && (
+                        <Text style={{ color: 'red', fontSize: 12 }}>
+                            Enter a valid amount
                         </Text>
                     )}
                 </View>
