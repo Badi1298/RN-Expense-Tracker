@@ -5,7 +5,7 @@ import AddExpenseScreen from '../screens/AddExpenseScreen';
 
 export type RootStackParamsList = {
     Tabs: undefined;
-    AddExpense: { expenseId: number | null };
+    AddExpense: { expenseId: string | null };
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();

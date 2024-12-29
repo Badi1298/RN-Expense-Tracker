@@ -6,7 +6,7 @@ import ExpenseItem from './ExpenseItem';
 
 type Props = {
     expenses: RootState['expenses'];
-    onItemPress: (id: number) => void;
+    onItemPress: (id: string) => void;
 };
 
 export default function ExpensesList({ expenses, onItemPress }: Props) {

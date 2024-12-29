@@ -9,7 +9,7 @@ import RecentExpensesScreen from '../screens/RecentExpensesScreen';
 export type RootTabParamsList = {
     RecentExpenses: undefined;
     AllExpenses: undefined;
-    AddExpense: { expenseId: number | null };
+    AddExpense: { expenseId: string | null };
 };
 
 const RootTab = createBottomTabNavigator<RootTabParamsList>();

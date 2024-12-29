@@ -13,7 +13,7 @@ import { Expense } from '../store/slices/expensesSlice';
 
 type ExpenseItemProps = {
     expense: Expense;
-    onItemPress: (id: number) => void;
+    onItemPress: (id: string) => void;
 };
 
 export default function ExpenseItem({

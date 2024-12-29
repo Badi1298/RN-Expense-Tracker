@@ -47,7 +47,7 @@ export default function RecentExpensesScreen({ navigation }: Props) {
         memoizedDebouncedSetRange(value);
     }
 
-    function expenseItemPressHandler(id: number) {
+    function expenseItemPressHandler(id: string) {
         const foundExpense = expenses?.find((expense) => expense.id === id);
 
         if (!foundExpense) return;

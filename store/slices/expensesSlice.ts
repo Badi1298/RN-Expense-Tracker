@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { expensesApi, useStoreExpenseMutation } from '../../services/expenses';
 
 export interface Expense {
-    id: number | null;
+    id: string | null;
     title: string;
     amount: string;
     date: string;
@@ -29,7 +29,7 @@ export const expensesSlice = createSlice({
             }
         },
 
-        removeExpense(state, action: PayloadAction<number>) {
+        removeExpense(state, action: PayloadAction<string>) {
             return state.filter((expense) => expense.id !== action.payload);
         },
     },
