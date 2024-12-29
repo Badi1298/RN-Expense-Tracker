@@ -1,9 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 
-import { RootState } from '../store';
-import { useSelector } from 'react-redux';
-
 import { RootTabParamsList } from '../navigation/RootBottomTabs';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
@@ -58,9 +55,25 @@ export default function RecentExpensesScreen({ navigation }: Props) {
     return (
         <View>
             {error ? (
-                <Text>Error fetching expenses</Text>
+                <Text
+                    style={{
+                        color: 'red',
+                        textAlign: 'center',
+                        marginTop: 20,
+                    }}
+                >
+                    Error fetching expenses. Try refreshing the page. If it
+                    persists, contact support.
+                </Text>
             ) : isLoading ? (
-                <Text>Loading...</Text>
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        marginTop: 20,
+                    }}
+                >
+                    Loading...
+                </Text>
             ) : (
                 <>
                     <View style={styles.card}>
