@@ -16,6 +16,10 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamsList } from '../navigation/RootStack';
 
 import BaseButton from '../components/ui/BaseButton';
+import {
+    useStoreExpenseMutation,
+    useUpdateExpenseMutation,
+} from '../services/expenses';
 
 type Props = StackScreenProps<RootStackParamsList, 'AddExpense'>;
 
@@ -24,6 +28,9 @@ export default function AddExpense({ route, navigation }: Props) {
     const dispatch = useDispatch();
 
     const { expenseId } = route.params;
+
+    const [storeExpense] = useStoreExpenseMutation();
+    const [updateExpense] = useUpdateExpenseMutation();
 
     const [expense, setExpense] = useState<Expense>({
         id: null,
@@ -60,7 +67,12 @@ export default function AddExpense({ route, navigation }: Props) {
     const handleSaveExpense = () => {
         if (!validateExpense()) return;
 
-        dispatch(saveExpense(expense));
+        if (expense.id) {
+            updateExpense(expense);
+            return;
+        }
+
+        storeExpense(expense);
         navigation.goBack();
     };
 

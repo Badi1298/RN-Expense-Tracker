@@ -11,6 +11,7 @@ import { debounce } from 'lodash';
 import { isAfter, subDays } from 'date-fns';
 
 import ExpensesList from '../components/ExpensesList';
+import { useGetExpensesQuery } from '../services/expenses';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
@@ -31,13 +32,13 @@ export default function RecentExpensesScreen({ navigation }: Props) {
         [setRange]
     );
 
-    const expenses = useSelector((state: RootState) => state.expenses);
+    const { data: expenses = [], error, isLoading } = useGetExpensesQuery();
 
     const expensesInRange = expenses.filter((expense) =>
         isAfter(new Date(expense.date), subDays(new Date(), +range))
     );
 
-    const expensesInRangeTotal = expensesInRange.reduce((acc, curr) => {
+    const expensesInRangeTotal = expensesInRange?.reduce((acc, curr) => {
         return acc + parseFloat(curr.amount);
     }, 0);
 
@@ -47,7 +48,7 @@ export default function RecentExpensesScreen({ navigation }: Props) {
     }
 
     function expenseItemPressHandler(id: number) {
-        const foundExpense = expenses.find((expense) => expense.id === id);
+        const foundExpense = expenses?.find((expense) => expense.id === id);
 
         if (!foundExpense) return;
 
@@ -56,25 +57,38 @@ export default function RecentExpensesScreen({ navigation }: Props) {
 
     return (
         <View>
-            <View style={styles.card}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={styles.cardText}>Last</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={tempRange}
-                        keyboardType="numeric"
-                        onChangeText={handleTextChange}
+            {error ? (
+                <Text>Error fetching expenses</Text>
+            ) : isLoading ? (
+                <Text>Loading...</Text>
+            ) : (
+                <>
+                    <View style={styles.card}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Text style={styles.cardText}>Last</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={tempRange}
+                                keyboardType="numeric"
+                                onChangeText={handleTextChange}
+                            />
+                            <Text style={styles.cardText}>days</Text>
+                        </View>
+                        <Text style={styles.cardText}>
+                            ${expensesInRangeTotal?.toFixed(2)}
+                        </Text>
+                    </View>
+                    <ExpensesList
+                        expenses={expensesInRange || []}
+                        onItemPress={expenseItemPressHandler}
                     />
-                    <Text style={styles.cardText}>days</Text>
-                </View>
-                <Text style={styles.cardText}>
-                    ${expensesInRangeTotal.toFixed(2)}
-                </Text>
-            </View>
-            <ExpensesList
-                expenses={expensesInRange}
-                onItemPress={expenseItemPressHandler}
-            />
+                </>
+            )}
         </View>
     );
 }
