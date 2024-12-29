@@ -17,6 +17,7 @@ import { RootStackParamsList } from '../navigation/RootStack';
 
 import BaseButton from '../components/ui/BaseButton';
 import {
+    useGetExpensesQuery,
     useStoreExpenseMutation,
     useUpdateExpenseMutation,
 } from '../services/expenses';
@@ -24,7 +25,8 @@ import {
 type Props = StackScreenProps<RootStackParamsList, 'AddExpense'>;
 
 export default function AddExpense({ route, navigation }: Props) {
-    const expenses = useSelector((state: RootState) => state.expenses);
+    const { data: expenses } = useGetExpensesQuery();
+    // const expenses = useSelector((state: RootState) => state.expenses);
     const dispatch = useDispatch();
 
     const { expenseId } = route.params;
@@ -42,7 +44,7 @@ export default function AddExpense({ route, navigation }: Props) {
 
     useEffect(() => {
         if (expenseId) {
-            const foundExpense = expenses.find(
+            const foundExpense = expenses?.find(
                 (expense) => expense.id === expenseId
             );
 
@@ -69,10 +71,10 @@ export default function AddExpense({ route, navigation }: Props) {
 
         if (expense.id) {
             updateExpense(expense);
-            return;
+        } else {
+            storeExpense(expense);
         }
 
-        storeExpense(expense);
         navigation.goBack();
     };
 
