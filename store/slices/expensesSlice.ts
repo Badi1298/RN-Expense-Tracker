@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
+import { storeExpense } from '../../service';
+
 export interface Expense {
     id: number | null;
     title: string;
@@ -85,6 +87,7 @@ export const expensesSlice = createSlice({
                 } else {
                     action.payload.id = state.length + 1;
                     state.push(action.payload);
+                    storeExpense(action.payload);
                 }
             } catch (err: any) {
                 throw new Error(err);
