@@ -3,11 +3,7 @@ import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
 
 import { RootState } from '../store';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-    Expense,
-    saveExpense,
-    removeExpense,
-} from '../store/slices/expensesSlice';
+import { Expense, removeExpense } from '../store/slices/expensesSlice';
 
 import dayjs from 'dayjs';
 import DateTimePicker from 'react-native-ui-datepicker';
