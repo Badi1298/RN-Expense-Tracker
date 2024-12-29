@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
 
-import { RootState } from '../store';
-import { useSelector, useDispatch } from 'react-redux';
-import { Expense, removeExpense } from '../store/slices/expensesSlice';
+import type { Expense } from '../types/expenses';
 
 import dayjs from 'dayjs';
 import DateTimePicker from 'react-native-ui-datepicker';
@@ -14,6 +12,7 @@ import { RootStackParamsList } from '../navigation/RootStack';
 import BaseButton from '../components/ui/BaseButton';
 import {
     useGetExpensesQuery,
+    useRemoveExpenseMutation,
     useStoreExpenseMutation,
     useUpdateExpenseMutation,
 } from '../services/expenses';
@@ -22,13 +21,12 @@ type Props = StackScreenProps<RootStackParamsList, 'AddExpense'>;
 
 export default function AddExpense({ route, navigation }: Props) {
     const { data: expenses } = useGetExpensesQuery();
-    // const expenses = useSelector((state: RootState) => state.expenses);
-    const dispatch = useDispatch();
 
     const { expenseId } = route.params;
 
     const [storeExpense] = useStoreExpenseMutation();
     const [updateExpense] = useUpdateExpenseMutation();
+    const [deleteExpense] = useRemoveExpenseMutation();
 
     const [expense, setExpense] = useState<Expense>({
         id: null,
@@ -77,7 +75,7 @@ export default function AddExpense({ route, navigation }: Props) {
     const handleDeleteExpense = () => {
         if (!expense.id) return;
 
-        dispatch(removeExpense(expense.id));
+        deleteExpense(expense.id);
         navigation.goBack();
     };
 

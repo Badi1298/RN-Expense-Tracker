@@ -9,7 +9,7 @@ import {
     Platform,
 } from 'react-native';
 
-import { Expense } from '../store/slices/expensesSlice';
+import type { Expense } from '../types/expenses';
 
 type ExpenseItemProps = {
     expense: Expense;

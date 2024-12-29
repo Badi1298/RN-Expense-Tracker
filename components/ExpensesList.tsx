@@ -1,11 +1,12 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text } from 'react-native';
 
-import { RootState } from '../store';
 import ExpenseItem from './ExpenseItem';
 
+import type { Expense } from '../types/expenses';
+
 type Props = {
-    expenses: RootState['expenses'];
+    expenses: Expense[];
     onItemPress: (id: string) => void;
 };
 
@@ -20,7 +21,7 @@ export default function ExpensesList({ expenses, onItemPress }: Props) {
                 renderItem={({ item }) => (
                     <ExpenseItem expense={item} onItemPress={onItemPress} />
                 )}
-                keyExtractor={(item) => item.id!.toString()}
+                keyExtractor={(item) => item.id ?? item.toString()}
             />
         </>
     );

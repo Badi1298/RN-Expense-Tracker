@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { Expense } from '../store/slices/expensesSlice';
+import type { Expense } from '../types/expenses';
 
 const baseUrl =
     'https://rn-expense-44183-default-rtdb.europe-west1.firebasedatabase.app/';
@@ -44,6 +44,13 @@ export const expensesApi = createApi({
             }),
             invalidatesTags: ['Expense'],
         }),
+        removeExpense: builder.mutation<void, string>({
+            query: (id) => ({
+                url: `expenses/${id}.json`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Expense'],
+        }),
     }),
 });
 
@@ -51,4 +58,5 @@ export const {
     useGetExpensesQuery,
     useStoreExpenseMutation,
     useUpdateExpenseMutation,
+    useRemoveExpenseMutation,
 } = expensesApi;
