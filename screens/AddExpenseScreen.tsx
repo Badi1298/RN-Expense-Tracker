@@ -73,7 +73,10 @@ export default function AddExpense({ route, navigation }: Props) {
 
     const handleSaveError = () => {
         if (isStoreError || isUpdateError) {
-            Alert.alert('Error', 'An error occurred while saving the expense.');
+            Alert.alert(
+                'Error',
+                'An error occurred while saving the expense. Try again, if the error persists, contact us.'
+            );
             return true;
         }
 
@@ -84,7 +87,7 @@ export default function AddExpense({ route, navigation }: Props) {
         if (isDeleteError) {
             Alert.alert(
                 'Error',
-                'An error occurred while deleting the expense.'
+                'An error occurred while deleting the expense. Try again, if the error persists, contact us.'
             );
             return true;
         }
