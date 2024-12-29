@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    ScrollView,
+    Alert,
+} from 'react-native';
 
 import type { Expense } from '../types/expenses';
 
@@ -16,6 +23,7 @@ import {
     useStoreExpenseMutation,
     useUpdateExpenseMutation,
 } from '../services/expenses';
+import LoadingOverlay from '../components/ui/LoadingOverlay';
 
 type Props = StackScreenProps<RootStackParamsList, 'AddExpense'>;
 
@@ -24,9 +32,12 @@ export default function AddExpense({ route, navigation }: Props) {
 
     const { expenseId } = route.params;
 
-    const [storeExpense] = useStoreExpenseMutation();
-    const [updateExpense] = useUpdateExpenseMutation();
-    const [deleteExpense] = useRemoveExpenseMutation();
+    const [storeExpense, { isLoading: isStoring, isError: isStoreError }] =
+        useStoreExpenseMutation();
+    const [updateExpense, { isLoading: isUpdating, isError: isUpdateError }] =
+        useUpdateExpenseMutation();
+    const [deleteExpense, { isLoading: isDeleting, isError: isDeleteError }] =
+        useRemoveExpenseMutation();
 
     const [expense, setExpense] = useState<Expense>({
         id: null,
@@ -60,6 +71,27 @@ export default function AddExpense({ route, navigation }: Props) {
         return true;
     };
 
+    const handleSaveError = () => {
+        if (isStoreError || isUpdateError) {
+            Alert.alert('Error', 'An error occurred while saving the expense.');
+            return true;
+        }
+
+        return false;
+    };
+
+    const handleDeleteError = () => {
+        if (isDeleteError) {
+            Alert.alert(
+                'Error',
+                'An error occurred while deleting the expense.'
+            );
+            return true;
+        }
+
+        return false;
+    };
+
     const handleSaveExpense = () => {
         if (!validateExpense()) return;
 
@@ -68,6 +100,9 @@ export default function AddExpense({ route, navigation }: Props) {
         } else {
             storeExpense(expense);
         }
+
+        if (handleSaveError()) return;
+        if (handleDeleteError()) return;
 
         navigation.goBack();
     };
@@ -78,6 +113,10 @@ export default function AddExpense({ route, navigation }: Props) {
         deleteExpense(expense.id);
         navigation.goBack();
     };
+
+    if (isStoring || isUpdating || isDeleting) {
+        return <LoadingOverlay />;
+    }
 
     return (
         <ScrollView>

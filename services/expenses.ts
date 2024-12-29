@@ -15,12 +15,6 @@ export const expensesApi = createApi({
         getExpenses: builder.query<Expense[], void>({
             query: () => 'expenses.json',
             transformResponse: (response: any) => {
-                console.log(
-                    Object.keys(response).map((key) => ({
-                        id: key,
-                        ...response[key],
-                    }))
-                );
                 return Object.keys(response).map((key) => ({
                     id: key,
                     ...response[key],

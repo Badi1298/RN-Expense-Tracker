@@ -9,6 +9,7 @@ import { isAfter, subDays } from 'date-fns';
 
 import ExpensesList from '../components/ExpensesList';
 import { useGetExpensesQuery } from '../services/expenses';
+import LoadingOverlay from '../components/ui/LoadingOverlay';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
@@ -53,7 +54,7 @@ export default function RecentExpensesScreen({ navigation }: Props) {
     }
 
     return (
-        <View>
+        <View style={{ flex: 1 }}>
             {error ? (
                 <Text
                     style={{
@@ -66,14 +67,7 @@ export default function RecentExpensesScreen({ navigation }: Props) {
                     persists, contact support.
                 </Text>
             ) : isLoading ? (
-                <Text
-                    style={{
-                        textAlign: 'center',
-                        marginTop: 20,
-                    }}
-                >
-                    Loading...
-                </Text>
+                <LoadingOverlay />
             ) : (
                 <>
                     <View style={styles.card}>
