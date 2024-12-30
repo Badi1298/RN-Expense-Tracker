@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import BaseButton from '../components/ui/BaseButton';
 
 export default function AuthScreen() {
     const [email, setEmail] = useState('');
@@ -50,22 +51,20 @@ export default function AuthScreen() {
                     secureTextEntry
                 />
             )}
-            <View style={styles.buttonContainer}>
-                <Button
-                    title={isLogin ? 'Login' : 'Sign Up'}
-                    onPress={isLogin ? handleLogin : handleSignup}
-                />
-            </View>
-            <View style={styles.buttonContainer}>
-                <Button
-                    title={
-                        isLogin
-                            ? "Don't have an account? Sign Up"
-                            : 'Already have an account? Login'
-                    }
-                    onPress={() => setIsLogin((prev) => !prev)}
-                />
-            </View>
+            <BaseButton
+                style={styles.buttonContainer}
+                title={isLogin ? 'Login' : 'Sign Up'}
+                onPress={isLogin ? handleLogin : handleSignup}
+            />
+            <BaseButton
+                style={styles.buttonContainer}
+                title={
+                    isLogin
+                        ? "Don't have an account? Sign Up"
+                        : 'Already have an account? Login'
+                }
+                onPress={() => setIsLogin((prev) => !prev)}
+            />
         </View>
     );
 }
