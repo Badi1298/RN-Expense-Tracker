@@ -57,7 +57,11 @@ export default function AuthScreen() {
                 onPress={isLogin ? handleLogin : handleSignup}
             />
             <BaseButton
-                style={styles.buttonContainer}
+                style={[
+                    styles.buttonContainer,
+                    { backgroundColor: 'transparent', elevation: 0 },
+                ]}
+                textStyle={{ color: 'black' }}
                 title={
                     isLogin
                         ? "Don't have an account? Sign Up"
@@ -78,6 +82,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         marginBottom: 16,
+        fontWeight: 'bold',
         textAlign: 'center',
     },
     input: {
@@ -86,6 +91,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 12,
         paddingHorizontal: 8,
+        borderRadius: 6,
     },
     buttonContainer: {
         marginTop: 12,

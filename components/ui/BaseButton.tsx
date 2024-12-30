@@ -7,21 +7,28 @@ import {
     StyleSheet,
     StyleProp,
     ViewStyle,
+    TextStyle,
 } from 'react-native';
 
 type Props = {
     title: string;
     style?: StyleProp<ViewStyle>;
+    textStyle?: StyleProp<TextStyle>;
     onPress: () => void;
 };
 
-export default function BaseButton({ title, onPress, style }: Props) {
+export default function BaseButton({
+    title,
+    onPress,
+    style,
+    textStyle,
+}: Props) {
     return (
         <Pressable
             style={[styles.button, styles.buttonClose, style]}
             onPress={onPress}
         >
-            <Text style={styles.textStyle}>{title}</Text>
+            <Text style={[styles.textStyle, textStyle]}>{title}</Text>
         </Pressable>
     );
 }
