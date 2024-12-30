@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
 import BaseButton from '../components/ui/BaseButton';
+import { signUp } from '../services/auth';
 
 export default function AuthScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLogin, setIsLogin] = useState(true);
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleLogin = () => {
         // Handle login logic here
@@ -14,14 +19,16 @@ export default function AuthScreen() {
         console.log('Password:', password);
     };
 
-    const handleSignup = () => {
+    const handleSignup = async () => {
         if (password !== confirmPassword) {
             console.log('Passwords do not match');
             return;
         }
+
         // Handle signup logic here
-        console.log('Email:', email);
-        console.log('Password:', password);
+        const token = await signUp(email, password);
+
+        console.log(token);
     };
 
     return (
@@ -35,21 +42,41 @@ export default function AuthScreen() {
                 autoCapitalize="none"
                 keyboardType="email-address"
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
-            {!isLogin && (
+            <View style={styles.passwordContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    secureTextEntry
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    autoCapitalize="none"
+                    secureTextEntry={!showPassword}
                 />
+                <Ionicons
+                    name={showPassword ? 'eye-off' : 'eye'}
+                    size={24}
+                    color="gray"
+                    style={styles.icon}
+                    onPress={() => setShowPassword((prev) => !prev)}
+                />
+            </View>
+            {!isLogin && (
+                <View style={styles.passwordContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChangeText={setConfirmPassword}
+                        autoCapitalize="none"
+                        secureTextEntry={!showConfirmPassword}
+                    />
+                    <Ionicons
+                        name={showConfirmPassword ? 'eye-off' : 'eye'}
+                        size={24}
+                        color="gray"
+                        style={styles.icon}
+                        onPress={() => setShowConfirmPassword((prev) => !prev)}
+                    />
+                </View>
             )}
             <BaseButton
                 style={styles.buttonContainer}
@@ -95,5 +122,14 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: 12,
+    },
+    passwordContainer: {
+        position: 'relative',
+    },
+    icon: {
+        position: 'absolute',
+        right: 8,
+        top: 8,
+        marginLeft: 8,
     },
 });
