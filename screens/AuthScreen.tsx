@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    StyleSheet,
+    ActivityIndicator,
+} from 'react-native';
+
+import { signUp } from '../services/auth';
+
 import { Ionicons } from '@expo/vector-icons';
 
 import BaseButton from '../components/ui/BaseButton';
-import { signUp } from '../services/auth';
 
 export default function AuthScreen() {
+    const [isLogin, setIsLogin] = useState(true);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isLogin, setIsLogin] = useState(true);
     const [confirmPassword, setConfirmPassword] = useState('');
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const [creatingUser, setCreatingUser] = useState(false);
 
     const handleLogin = () => {
         // Handle login logic here
@@ -26,10 +38,21 @@ export default function AuthScreen() {
         }
 
         // Handle signup logic here
+        setCreatingUser(true);
         const token = await signUp(email, password);
+        setCreatingUser(false);
 
         console.log(token);
     };
+
+    if (creatingUser) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>Creating User...</Text>
+                <ActivityIndicator size="large" color="blue" />
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>

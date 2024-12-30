@@ -16,28 +16,38 @@ export const signUp = async (
     email: string,
     password: string
 ): Promise<AuthResponse> => {
-    const response = await axios.post<AuthResponse>(
-        `${FIREBASE_AUTH_URL}:signUp?key=${FIREBASE_API_KEY}`,
-        {
-            email,
-            password,
-            returnSecureToken: true,
-        }
-    );
-    return response.data;
+    try {
+        const response = await axios.post<AuthResponse>(
+            `${FIREBASE_AUTH_URL}:signUp?key=${FIREBASE_API_KEY}`,
+            {
+                email,
+                password,
+                returnSecureToken: true,
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return error.response.data;
+    }
 };
 
 export const signIn = async (
     email: string,
     password: string
 ): Promise<AuthResponse> => {
-    const response = await axios.post<AuthResponse>(
-        `${FIREBASE_AUTH_URL}:signInWithPassword?key=${FIREBASE_API_KEY}`,
-        {
-            email,
-            password,
-            returnSecureToken: true,
-        }
-    );
-    return response.data;
+    try {
+        const response = await axios.post<AuthResponse>(
+            `${FIREBASE_AUTH_URL}:signInWithPassword?key=${FIREBASE_API_KEY}`,
+            {
+                email,
+                password,
+                returnSecureToken: true,
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return error.response.data;
+    }
 };

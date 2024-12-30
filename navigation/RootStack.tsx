@@ -1,8 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 
 import RootBottomTabs from './RootBottomTabs';
-import AddExpenseScreen from '../screens/AddExpenseScreen';
 import AuthScreen from '../screens/AuthScreen';
+import AddExpenseScreen from '../screens/AddExpenseScreen';
 
 // export type RootStackParamsList = {
 //     Tabs: undefined;
@@ -28,7 +28,11 @@ export default function RootStack() {
                 component={AddExpenseScreen}
                 options={{ presentation: 'modal' }}
             /> */}
-            <Stack.Screen name="Auth" component={AuthScreen} />
+            <Stack.Screen
+                name="Auth"
+                component={AuthScreen}
+                options={{ headerShown: false }}
+            />
         </Stack.Navigator>
     );
 }
