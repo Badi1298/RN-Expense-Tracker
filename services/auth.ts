@@ -27,8 +27,13 @@ export const signUp = async (
         );
         return response.data;
     } catch (error) {
-        console.error(error);
-        return error.response.data;
+        if (axios.isAxiosError(error) && error.response) {
+            console.error(error);
+            return error.response.data;
+        } else {
+            console.error(error);
+            throw new Error('An unknown error occurred');
+        }
     }
 };
 
@@ -47,7 +52,12 @@ export const signIn = async (
         );
         return response.data;
     } catch (error) {
-        console.error(error);
-        return error.response.data;
+        if (axios.isAxiosError(error) && error.response) {
+            console.error(error);
+            return error.response.data;
+        } else {
+            console.error(error);
+            throw new Error('An unknown error occurred');
+        }
     }
 };
