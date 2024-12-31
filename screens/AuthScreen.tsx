@@ -5,15 +5,21 @@ import {
     TextInput,
     StyleSheet,
     ActivityIndicator,
+    Alert,
 } from 'react-native';
 
 import { signIn, signUp } from '../services/auth';
+
+import { useDispatch } from 'react-redux';
+import { login, logout } from '../store/slices/authSlice';
 
 import { Ionicons } from '@expo/vector-icons';
 
 import BaseButton from '../components/ui/BaseButton';
 
 export default function AuthScreen() {
+    const dispatch = useDispatch();
+
     const [isLogin, setIsLogin] = useState(true);
 
     const [email, setEmail] = useState('');
@@ -28,10 +34,20 @@ export default function AuthScreen() {
 
     const handleLogin = async () => {
         setLoggingIn(true);
-        const token = await signIn(email, password);
-        setLoggingIn(false);
 
-        console.log(token);
+        try {
+            const token = await signIn(email, password);
+            setLoggingIn(false);
+
+            dispatch(login(token));
+        } catch (error) {
+            Alert.alert(
+                'Authentication failed!',
+                'Could not log in. Please try again.'
+            );
+        } finally {
+            setLoggingIn(false);
+        }
     };
 
     const handleSignup = async () => {
@@ -41,10 +57,20 @@ export default function AuthScreen() {
         }
 
         setCreatingUser(true);
-        const token = await signUp(email, password);
-        setCreatingUser(false);
 
-        console.log(token);
+        try {
+            const token = await signUp(email, password);
+            setCreatingUser(false);
+
+            dispatch(login(token));
+        } catch (error) {
+            Alert.alert(
+                'Authentication failed!',
+                'Could not sign up. Please try again.'
+            );
+        } finally {
+            setCreatingUser(false);
+        }
     };
 
     if (creatingUser) {
