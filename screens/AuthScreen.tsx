@@ -51,7 +51,7 @@ export default function AuthScreen() {
 
     const handleSignup = async () => {
         if (password !== confirmPassword) {
-            console.log('Passwords do not match');
+            Alert.alert('Passwords do not match!', 'Please try again.');
             return;
         }
 
