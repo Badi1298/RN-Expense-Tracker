@@ -7,7 +7,7 @@ import {
     ActivityIndicator,
 } from 'react-native';
 
-import { signUp } from '../services/auth';
+import { signIn, signUp } from '../services/auth';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -23,12 +23,15 @@ export default function AuthScreen() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+    const [loggingIn, setLoggingIn] = useState(false);
     const [creatingUser, setCreatingUser] = useState(false);
 
     const handleLogin = () => {
-        // Handle login logic here
-        console.log('Email:', email);
-        console.log('Password:', password);
+        setLoggingIn(true);
+        const token = signIn(email, password);
+        setLoggingIn(false);
+
+        console.log(token);
     };
 
     const handleSignup = async () => {
@@ -37,7 +40,6 @@ export default function AuthScreen() {
             return;
         }
 
-        // Handle signup logic here
         setCreatingUser(true);
         const token = await signUp(email, password);
         setCreatingUser(false);
@@ -49,6 +51,15 @@ export default function AuthScreen() {
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>Creating User...</Text>
+                <ActivityIndicator size="large" color="blue" />
+            </View>
+        );
+    }
+
+    if (loggingIn) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>Logging In...</Text>
                 <ActivityIndicator size="large" color="blue" />
             </View>
         );

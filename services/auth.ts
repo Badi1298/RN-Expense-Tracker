@@ -12,13 +12,14 @@ interface AuthResponse {
     registered?: boolean;
 }
 
-export const signUp = async (
+const authenticate = async (
+    mode: 'signUp' | 'signInWithPassword',
     email: string,
     password: string
-): Promise<AuthResponse> => {
+) => {
     try {
         const response = await axios.post<AuthResponse>(
-            `${FIREBASE_AUTH_URL}:signUp?key=${FIREBASE_API_KEY}`,
+            `${FIREBASE_AUTH_URL}:${mode}?key=${FIREBASE_API_KEY}`,
             {
                 email,
                 password,
@@ -37,27 +38,16 @@ export const signUp = async (
     }
 };
 
+export const signUp = async (
+    email: string,
+    password: string
+): Promise<AuthResponse> => {
+    return authenticate('signUp', email, password);
+};
+
 export const signIn = async (
     email: string,
     password: string
 ): Promise<AuthResponse> => {
-    try {
-        const response = await axios.post<AuthResponse>(
-            `${FIREBASE_AUTH_URL}:signInWithPassword?key=${FIREBASE_API_KEY}`,
-            {
-                email,
-                password,
-                returnSecureToken: true,
-            }
-        );
-        return response.data;
-    } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-            console.error(error);
-            return error.response.data;
-        } else {
-            console.error(error);
-            throw new Error('An unknown error occurred');
-        }
-    }
+    return authenticate('signInWithPassword', email, password);
 };
