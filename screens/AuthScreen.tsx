@@ -45,7 +45,6 @@ export default function AuthScreen() {
                 'Authentication failed!',
                 'Could not log in. Please try again.'
             );
-        } finally {
             setLoggingIn(false);
         }
     };
@@ -68,7 +67,6 @@ export default function AuthScreen() {
                 'Authentication failed!',
                 'Could not sign up. Please try again.'
             );
-        } finally {
             setCreatingUser(false);
         }
     };

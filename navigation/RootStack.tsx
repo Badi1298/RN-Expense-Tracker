@@ -21,30 +21,28 @@ export default function RootStack() {
             state.auth.isAuthenticated
     );
 
-    if (!isAuthenticated) {
-        return (
-            <Stack.Navigator>
+    return (
+        <Stack.Navigator>
+            {!isAuthenticated ? (
                 <Stack.Screen
                     name="Auth"
                     component={AuthScreen}
                     options={{ headerShown: false }}
                 />
-            </Stack.Navigator>
-        );
-    }
-
-    return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name="Tabs"
-                component={RootBottomTabs}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
-                name="AddExpense"
-                component={AddExpenseScreen}
-                options={{ presentation: 'modal' }}
-            />
+            ) : (
+                <>
+                    <Stack.Screen
+                        name="Tabs"
+                        component={RootBottomTabs}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="AddExpense"
+                        component={AddExpenseScreen}
+                        options={{ presentation: 'modal' }}
+                    />
+                </>
+            )}
         </Stack.Navigator>
     );
 }
