@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Alert } from 'react-native';
 
 const FIREBASE_API_KEY = 'AIzaSyBNqnmNEJibRVDOJMdpblyJmP3nkYr3gMo';
 const FIREBASE_AUTH_URL = `https://identitytoolkit.googleapis.com/v1/accounts`;
@@ -16,7 +17,7 @@ const authenticate = async (
     mode: 'signUp' | 'signInWithPassword',
     email: string,
     password: string
-) => {
+): Promise<AuthResponse> => {
     try {
         const response = await axios.post<AuthResponse>(
             `${FIREBASE_AUTH_URL}:${mode}?key=${FIREBASE_API_KEY}`,
@@ -26,13 +27,18 @@ const authenticate = async (
                 returnSecureToken: true,
             }
         );
+
         return response.data;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-            console.error(error);
+            Alert.alert(
+                'Authentication failed!',
+                `Could not ${
+                    mode === 'signUp' ? 'sign up' : 'log in'
+                }. Please try again.`
+            );
             return error.response.data;
         } else {
-            console.error(error);
             throw new Error('An unknown error occurred');
         }
     }
@@ -42,12 +48,12 @@ export const signUp = async (
     email: string,
     password: string
 ): Promise<AuthResponse> => {
-    return authenticate('signUp', email, password);
+    return await authenticate('signUp', email, password);
 };
 
 export const signIn = async (
     email: string,
     password: string
 ): Promise<AuthResponse> => {
-    return authenticate('signInWithPassword', email, password);
+    return await authenticate('signInWithPassword', email, password);
 };

@@ -26,9 +26,9 @@ export default function AuthScreen() {
     const [loggingIn, setLoggingIn] = useState(false);
     const [creatingUser, setCreatingUser] = useState(false);
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         setLoggingIn(true);
-        const token = signIn(email, password);
+        const token = await signIn(email, password);
         setLoggingIn(false);
 
         console.log(token);
