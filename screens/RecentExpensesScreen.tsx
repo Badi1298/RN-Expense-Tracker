@@ -10,6 +10,7 @@ import { isAfter, subDays } from 'date-fns';
 import ExpensesList from '../components/ExpensesList';
 import { useGetExpensesQuery } from '../services/expenses';
 import LoadingOverlay from '../components/ui/LoadingOverlay';
+import { useSelector } from 'react-redux';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'RecentExpenses'>;
 
@@ -30,7 +31,15 @@ export default function RecentExpensesScreen({ navigation }: Props) {
         [setRange]
     );
 
-    const { data: expenses = [], error, isLoading } = useGetExpensesQuery();
+    const token = useSelector(
+        (state: { auth: { token: string } }) => state.auth.token
+    );
+
+    const {
+        data: expenses = [],
+        error,
+        isLoading,
+    } = useGetExpensesQuery(token);
 
     const expensesInRange = expenses.filter((expense) =>
         isAfter(new Date(expense.date), subDays(new Date(), +range))

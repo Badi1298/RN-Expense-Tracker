@@ -1,14 +1,22 @@
 import React from 'react';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+
+import { useGetExpensesQuery } from '../services/expenses';
+
+import { useSelector } from 'react-redux';
+
+import { RootTabParamsList } from '../navigation/RootBottomTabs';
 
 import ExpensesList from '../components/ExpensesList';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { RootTabParamsList } from '../navigation/RootBottomTabs';
-import { useGetExpensesQuery } from '../services/expenses';
 
 type Props = BottomTabScreenProps<RootTabParamsList, 'AllExpenses'>;
 
 export default function AllExpensesScreen({ navigation }: Props) {
-    const { data: expenses } = useGetExpensesQuery();
+    const token = useSelector(
+        (state: { auth: { token: string } }) => state.auth.token
+    );
+
+    const { data: expenses } = useGetExpensesQuery(token);
 
     function expenseItemPressHandler(id: string) {
         const foundExpense = expenses?.find((expense) => expense.id === id);

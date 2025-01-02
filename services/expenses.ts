@@ -12,8 +12,8 @@ export const expensesApi = createApi({
     }),
     tagTypes: ['Expense'],
     endpoints: (builder) => ({
-        getExpenses: builder.query<Expense[], void>({
-            query: () => 'expenses.json',
+        getExpenses: builder.query<Expense[], string>({
+            query: (token) => 'expenses.json?auth=' + token,
             transformResponse: (response: any) => {
                 return Object.keys(response).map((key) => ({
                     id: key,
@@ -22,11 +22,14 @@ export const expensesApi = createApi({
             },
             providesTags: ['Expense'],
         }),
-        storeExpense: builder.mutation<Expense, Partial<Expense>>({
-            query: (body) => ({
+        storeExpense: builder.mutation<
+            Expense,
+            { token: string; expense: Partial<Expense> }
+        >({
+            query: ({ token, expense }) => ({
                 url: 'expenses.json',
                 method: 'POST',
-                body,
+                body: expense,
             }),
             invalidatesTags: ['Expense'],
         }),

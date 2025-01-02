@@ -24,11 +24,16 @@ import {
     useUpdateExpenseMutation,
 } from '../services/expenses';
 import LoadingOverlay from '../components/ui/LoadingOverlay';
+import { useSelector } from 'react-redux';
 
 type Props = StackScreenProps<RootStackParamsList, 'AddExpense'>;
 
 export default function AddExpense({ route, navigation }: Props) {
-    const { data: expenses } = useGetExpensesQuery();
+    const token = useSelector(
+        (state: { auth: { token: string } }) => state.auth.token
+    );
+
+    const { data: expenses } = useGetExpensesQuery(token);
 
     const { expenseId } = route.params;
 
