@@ -2,13 +2,21 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import type { Expense } from '../types/expenses';
 
-const baseUrl =
-    'https://rn-expense-44183-default-rtdb.europe-west1.firebasedatabase.app/';
+const baseUrl = 'https://rn-expense-44183-default-rtdb.europe-west1.firebasedatabase.app/';
 
 export const expensesApi = createApi({
     reducerPath: 'expensesApi',
     baseQuery: fetchBaseQuery({
         baseUrl,
+        prepareHeaders: (headers, { getState }) => {
+            const token = (getState() as any).auth.token;
+
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
     }),
     tagTypes: ['Expense'],
     endpoints: (builder) => ({
@@ -22,14 +30,11 @@ export const expensesApi = createApi({
             },
             providesTags: ['Expense'],
         }),
-        storeExpense: builder.mutation<
-            Expense,
-            { token: string; expense: Partial<Expense> }
-        >({
-            query: ({ token, expense }) => ({
+        storeExpense: builder.mutation<Expense, Partial<Expense>>({
+            query: (body) => ({
                 url: 'expenses.json',
                 method: 'POST',
-                body: expense,
+                body,
             }),
             invalidatesTags: ['Expense'],
         }),
@@ -51,9 +56,4 @@ export const expensesApi = createApi({
     }),
 });
 
-export const {
-    useGetExpensesQuery,
-    useStoreExpenseMutation,
-    useUpdateExpenseMutation,
-    useRemoveExpenseMutation,
-} = expensesApi;
+export const { useGetExpensesQuery, useStoreExpenseMutation, useUpdateExpenseMutation, useRemoveExpenseMutation } = expensesApi;
