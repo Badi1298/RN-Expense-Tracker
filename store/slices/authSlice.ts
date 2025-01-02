@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const loadAuthToken = createAsyncThunk('auth/fetchFromAsyncStorage', async () => {
     const token = await AsyncStorage.getItem('authToken');
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     console.log(token);
 
     return token; // Return the token or null if not found
@@ -32,8 +34,11 @@ export const authSlice = createSlice({
             })
             .addCase(loadAuthToken.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.token = action.payload;
-                state.isAuthenticated = true;
+
+                if (action.payload) {
+                    state.token = action.payload;
+                    state.isAuthenticated = true;
+                }
             })
             .addCase(loadAuthToken.rejected, (state) => {
                 state.status = 'failed';

@@ -1,14 +1,16 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { Ionicons } from '@expo/vector-icons';
 
 import AllExpensesScreen from '../screens/AllExpensesScreen';
 import RecentExpensesScreen from '../screens/RecentExpensesScreen';
-import { Alert } from 'react-native';
 
 export type RootTabParamsList = {
     RecentExpenses: undefined;
@@ -20,6 +22,11 @@ const RootTab = createBottomTabNavigator<RootTabParamsList>();
 
 export default function RootBottomTabs() {
     const dispatch = useDispatch();
+
+    const handleLogout = async () => {
+        await AsyncStorage.removeItem('authToken');
+        dispatch(logout());
+    };
 
     return (
         <RootTab.Navigator
@@ -53,7 +60,7 @@ export default function RootBottomTabs() {
                                         },
                                         {
                                             text: 'Logout',
-                                            onPress: () => dispatch(logout()),
+                                            onPress: handleLogout,
                                         },
                                     ],
                                     { cancelable: true }
@@ -71,11 +78,7 @@ export default function RootBottomTabs() {
                     title: 'Recent Expenses',
                     tabBarLabel: 'Recent',
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons
-                            name="hourglass-outline"
-                            size={size}
-                            color={color}
-                        />
+                        <Ionicons name="hourglass-outline" size={size} color={color} />
                     ),
                 }}
             />
@@ -86,11 +89,7 @@ export default function RootBottomTabs() {
                     title: 'All Expenses',
                     tabBarLabel: 'All Expenses',
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons
-                            name="calendar-outline"
-                            size={size}
-                            color={color}
-                        />
+                        <Ionicons name="calendar-outline" size={size} color={color} />
                     ),
                 }}
             />
