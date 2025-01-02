@@ -4,6 +4,7 @@ import { expensesApi } from '../services/expenses';
 
 import authReducer from './slices/authSlice';
 import expensesReducer from './slices/expensesSlice';
+import { useDispatch } from 'react-redux';
 
 export const store = configureStore({
     reducer: {
@@ -18,3 +19,5 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const useAppDispatch: () => AppDispatch = useDispatch;

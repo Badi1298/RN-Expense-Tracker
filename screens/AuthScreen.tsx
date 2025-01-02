@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    StyleSheet,
-    ActivityIndicator,
-    Alert,
-} from 'react-native';
+import { View, Text, TextInput, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { signIn, signUp } from '../services/auth';
 
 import { useDispatch } from 'react-redux';
-import { login, logout } from '../store/slices/authSlice';
+import { login } from '../store/slices/authSlice';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -37,14 +32,12 @@ export default function AuthScreen() {
 
         try {
             const token = await signIn(email, password);
+            await AsyncStorage.setItem('authToken', token);
             setLoggingIn(false);
 
             dispatch(login(token));
         } catch (error) {
-            Alert.alert(
-                'Authentication failed!',
-                'Could not log in. Please try again.'
-            );
+            Alert.alert('Authentication failed!', 'Could not log in. Please try again.');
             setLoggingIn(false);
         }
     };
@@ -59,14 +52,12 @@ export default function AuthScreen() {
 
         try {
             const token = await signUp(email, password);
+            await AsyncStorage.setItem('authToken', token);
             setCreatingUser(false);
 
             dispatch(login(token));
         } catch (error) {
-            Alert.alert(
-                'Authentication failed!',
-                'Could not sign up. Please try again.'
-            );
+            Alert.alert('Authentication failed!', 'Could not sign up. Please try again.');
             setCreatingUser(false);
         }
     };
@@ -142,15 +133,10 @@ export default function AuthScreen() {
                 onPress={isLogin ? handleLogin : handleSignup}
             />
             <BaseButton
-                style={[
-                    styles.buttonContainer,
-                    { backgroundColor: 'transparent', elevation: 0 },
-                ]}
+                style={[styles.buttonContainer, { backgroundColor: 'transparent', elevation: 0 }]}
                 textStyle={{ color: 'black' }}
                 title={
-                    isLogin
-                        ? "Don't have an account? Sign Up"
-                        : 'Already have an account? Login'
+                    isLogin ? "Don't have an account? Sign Up" : 'Already have an account? Login'
                 }
                 onPress={() => setIsLogin((prev) => !prev)}
             />
