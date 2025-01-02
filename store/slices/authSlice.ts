@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const loadAuthToken = createAsyncThunk('auth/fetchFromAsyncStorage', async () => {
     const token = await AsyncStorage.getItem('authToken');
-    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     console.log(token);
 
